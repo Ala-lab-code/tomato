@@ -1,16 +1,10 @@
-# This is a sample Python script.
+from src.preprocess import split_dataset
+from src.dataset import TomatoDataset
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+if __name__ == "__main__":
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    train_dataset = TomatoDataset('data/processed/train', mode='train')
+    print(f"Train dataset size: {len(train_dataset)}")
+    img, label = train_dataset[0]
+    print(f"Sample img shape: {img.shape}, label: {label}")

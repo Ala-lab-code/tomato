@@ -1,0 +1,49 @@
+Tomato_Leaf_Disease_FineGrained_Classification/
+├── data/
+│   ├── raw/
+│   │   └── plantvillage_tomato/      # Kaggle 原始数据（10 类）
+│   ├── processed/
+│   │   ├── train/
+│   │   ├── val/
+│   │   └── test/
+│   └── splits/
+│       └── split_info.json           # 训练/验证/测试划分记录（防止数据泄露）
+│
+├── notebooks/
+│   ├── 01_data_exploration.ipynb     # 数据探索 + 可视化
+│   ├── 02_baseline_logistic.ipynb    # Baseline：Logistic Regression
+│   ├── 03_deep_model_training.ipynb  # CNN + Attention 训练
+│   ├── 04_hyperparameter_tuning.ipynb# 超参数调优
+│   └── 05_result_analysis.ipynb      # 模型对比、误差分析
+│
+├── src/
+│   ├── __init__.py
+│   ├── config.py                     # 全局参数配置
+│   ├── dataset.py                    # 数据集类（Paddle）+数据增强
+│   ├── features.py                   # Baseline 特征提取（HOG / Flatten）
+│   ├── models/
+│   │   ├── __init__.py
+│   │   ├── baseline_lr.py            # Logistic Regression
+│   │   ├── cnn_se.py                  # CNN + SE-Block
+│   │   └── cnn_cbam.py                # CNN + CBAM（可选）
+│   ├── train.py                      # 通用训练循环
+│   ├── evaluate.py                   # 准确率、混淆矩阵、分类报告
+│   └── utils.py                      # 通用工具函数
+│
+├── README.md                         # 技术报告 + 实验说明
+└── requirements.txt                  # 依赖列表
+
+
+| 人员 | 主要任务             | 具体工作                                                                                                                                                                                         |
+| -- | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A  | 数据与 Baseline     | 1. 数据下载、清洗、划分（`preprocess.py`）<br>2. 数据探索可视化（notebook 01）<br>3. 特征工程 & Logistic Regression 基线（notebook 02 + `features.py` + `baseline_lr.py`）<br>4. 输出 Baseline 实验结果                         |
+| B  | 深度模型 & Attention | 1. Paddle Dataset 类 & 数据增强（`dataset.py`, `preprocess.py` Transform）<br>2. CNN + SE/CBAM 网络设计 (`cnn_se.py` / `cnn_cbam.py`) <br>3. 训练循环 (`train.py`) & 超参数调优（notebook 03/04）<br>4. 输出深度模型实验结果 |
+
+
+| 周次    | 人员 A                 | 人员 B                       |
+| ----- | -------------------- | -------------------------- |
+| 第 1 周 | 下载数据 + 划分数据 + 可视化    | 搭建 Paddle Dataset 类 + 数据增强 |
+| 第 2 周 | 特征工程 + Baseline      | CNN + SE 网络设计              |
+| 第 3 周 | Baseline 训练 & 分析     | 深度模型训练 & Loss/Acc 曲线       |
+| 第 4 周 | 帮忙调参/补充分析            | 超参数调优 & 最终结果整合             |
+| 第 5 周 | 报告撰写部分：Baseline & 数据 | 报告撰写部分：深度模型 & 结论           |
