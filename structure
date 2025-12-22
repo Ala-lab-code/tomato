@@ -24,8 +24,7 @@ Tomato_Leaf_Disease_FineGrained_Classification/
 │   ├── models/
 │   │   ├── __init__.py
 │   │   ├── baseline_lr.py            # Logistic Regression
-│   │   ├── cnn_se.py                  # CNN + SE-Block
-│   │   └── cnn_cbam.py                # CNN + CBAM（可选）
+│   │   ├── resnet_se.py                  # CNN + SE-Block
 │   ├── train.py                      # 通用训练循环
 │   ├── evaluate.py                   # 准确率、混淆矩阵、分类报告
 │   └── utils.py                      # 通用工具函数
