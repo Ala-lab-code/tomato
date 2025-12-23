@@ -10,7 +10,7 @@ class Runner:
     迁移学习训练封装
     支持 step/epoch 训练日志、验证、保存最优模型
     """
-    def __init__(self, model, optimizer, loss_fn, metric=None):
+    def __init__(self,  model, optimizer, loss_fn, metric=None):
         self.model = model
         self.optimizer = optimizer
         self.loss_fn = loss_fn

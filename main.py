@@ -9,6 +9,11 @@ from paddle.metric import Accuracy
 from src.dataset import TomatoDataset
 from src.models.resnet_se import ResNet50_SE
 from src.runner import Runner
+import os
+
+BASE_DIR = "/content/drive/MyDrive/tomato"
+CKPT_DIR = f"{BASE_DIR}/checkpoints"
+os.makedirs(CKPT_DIR, exist_ok=True)
 
 # -----------------------------
 # 数据集
@@ -53,5 +58,5 @@ runner.train(
     num_epochs=10,
     log_steps=50,
     eval_steps=200,
-    save_path="best_resnet_se.pdparams"
+    save_path=f"{CKPT_DIR}/best_resnet_se.pdparams"
 )

@@ -5,25 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b6c764ab-1281-40f5-b736-78d62e91a0f6" name="Changes" comment="测试提交">
-      <change afterPath="$PROJECT_DIR$/src/runner.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/tomato.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/processed/train/Tomato_Late_blight/1f38a263-cfb5-47fe-8c0e-f8d62141f922___GHLB_PS leaf 28 Day 12 .jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/processed/train/Tomato_Late_blight/784f6313-1080-4bd1-a556-d4e14e6879d0___GHLB_PS Leaf 53.1 Day 18 .jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/processed/train/Tomato_Late_blight/c9f19d2a-8c9d-4ac1-b077-545c5d6f53a9___GHLB_PS Leaf 53 Day 18 .jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/processed/train/Tomato_Late_blight/d45e9f86-2819-4c41-886c-73b7012674b3___GHLB Leaf 2 Day 16 .JPG" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/raw/Tomato_Late_blight/1f38a263-cfb5-47fe-8c0e-f8d62141f922___GHLB_PS leaf 28 Day 12 .jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/raw/Tomato_Late_blight/784f6313-1080-4bd1-a556-d4e14e6879d0___GHLB_PS Leaf 53.1 Day 18 .jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/raw/Tomato_Late_blight/c9f19d2a-8c9d-4ac1-b077-545c5d6f53a9___GHLB_PS Leaf 53 Day 18 .jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/raw/Tomato_Late_blight/d45e9f86-2819-4c41-886c-73b7012674b3___GHLB Leaf 2 Day 16 .JPG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/models/efficientnet_cbam.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/models/resnet_se.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/resnet_se.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/structure" beforeDir="false" afterPath="$PROJECT_DIR$/structure" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runner.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/runner.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,9 +25,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 5
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 5
+}</component>
   <component name="ProjectId" id="36yjS5xJdSI2htGeSBuCVhCEeML" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
@@ -56,7 +40,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
     "git-widget-placeholder": "main",
-    "last_opened_file_path": "C:/梓华/深度学习/课程作业/平时作业/实验课-卷积神经网络/nndl",
+    "last_opened_file_path": "C:/梓华/深度学习/课程作业/大作业/tomato",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -88,7 +72,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="preprocess" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="preprocess1" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="tomato" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -101,7 +85,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/preprocess.py" />
+      <option name="SCRIPT_NAME" value="C:\梓华\深度学习\课程作业\大作业\tomato\src\preprocess1.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -135,7 +119,7 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.resnet_se" />
-        <item itemvalue="Python.preprocess" />
+        <item itemvalue="Python.preprocess1" />
       </list>
     </recent_temporary>
   </component>
@@ -148,6 +132,7 @@
       <option name="presentableId" value="Default" />
       <updated>1765985701376</updated>
       <workItem from="1765985702684" duration="32870000" />
+      <workItem from="1766423026674" duration="7298000" />
     </task>
     <task id="LOCAL-00001" summary="测试提交">
       <option name="closed" value="true" />
