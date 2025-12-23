@@ -76,7 +76,7 @@ class ResNet50_SE(nn.Layer):
         # 2. SE 注意力模块，强化关键通道
         x = self.se(x)
 
-        # 3. 分类头，输出每个类别的 logits
+        # 3. 分类头
         x = self.classifier(x)  # 输出 [B, num_classes]
 
         return x

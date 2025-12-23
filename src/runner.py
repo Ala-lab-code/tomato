@@ -1,109 +1,135 @@
 # src/runner.py
 import paddle
-import paddle.nn as nn
 from paddle.io import DataLoader
-from paddle.metric import Accuracy
-from tqdm import tqdm  # 显示进度条
+from tqdm import tqdm
 
 class Runner:
     """
-    迁移学习训练封装
-    支持 step/epoch 训练日志、验证、保存最优模型
+    迁移学习训练封装类
+    功能：
+    - 支持 epoch 训练日志打印
+    - 支持验证集评估
+    - 保存验证集最优模型
+    - 支持 Early Stopping
     """
-    def __init__(self,  model, optimizer, loss_fn, metric=None):
+
+    def __init__(self, model, optimizer, loss_fn, metric=None, device=None):
         self.model = model
         self.optimizer = optimizer
         self.loss_fn = loss_fn
-        self.metric = metric  # 用于计算评价指标，如 Accuracy
+        self.metric = metric
 
-        # 记录训练过程
-        self.train_step_losses = []
+        # 训练过程记录
         self.train_epoch_losses = []
-        self.dev_losses = []
-        self.dev_scores = []
+        self.train_epoch_accs = []
+        self.val_epoch_losses = []
+        self.val_epoch_accs = []
 
-        self.best_score = 0.0  # 验证集最优指标
+        # 最优模型相关
+        self.best_score = 0.0
+        self.best_epoch = 0
+
+        # 设置设备
+        if device is None:
+            self.device = "gpu" if paddle.is_compiled_with_cuda() else "cpu"
+        else:
+            self.device = device
+        paddle.set_device(self.device)
 
     def train(self, train_loader: DataLoader, dev_loader: DataLoader = None,
-              num_epochs=20, log_steps=100, eval_steps=0, save_path="best_model.pdparams"):
-        paddle.set_device("gpu" if paddle.is_compiled_with_cuda() else "cpu")
+              num_epochs=20, save_path="best_model.pdparams", patience=3,
+              compute_train_metrics=True):
+        """
+        训练主函数
+        """
         self.model.train()
-        global_step = 0
-        num_training_steps = num_epochs * len(train_loader)
+        no_improve_epochs = 0  # Early Stopping计数
 
         for epoch in range(num_epochs):
             total_loss = 0.0
+            pbar = tqdm(train_loader, desc=f"Epoch {epoch + 1}/{num_epochs}", ncols=100)
 
-            # 使用 tqdm 显示 epoch 内 batch 进度
-            pbar = tqdm(train_loader, desc=f"Epoch {epoch+1}/{num_epochs}", ncols=100)
-
-            for step, (imgs, labels) in enumerate(pbar):
+            # 遍历 batch
+            for imgs, labels in pbar:
                 preds = self.model(imgs)
                 loss = self.loss_fn(preds, labels)
                 loss.backward()
                 self.optimizer.step()
                 self.optimizer.clear_grad()
 
-                # 记录 step loss
-                step_loss = loss.item()  # 改用 item() 获取标量
-                self.train_step_losses.append((global_step, step_loss))
-                total_loss += step_loss
+                total_loss += loss.item()
+                pbar.update(1)  # 只更新进度，不显示 loss
 
-                # 更新 tqdm 显示
-                pbar.set_postfix({"loss": f"{step_loss:.4f}", "global_step": global_step})
+            # 一个 epoch 完成后统计指标
+            if compute_train_metrics:
+                train_acc, train_loss = self.evaluate_loader(train_loader)
+            else:
+                train_acc, train_loss = 0.0, total_loss / len(train_loader)
 
-                # 验证
-                if eval_steps > 0 and dev_loader and \
-                        (global_step % eval_steps == 0 or global_step == num_training_steps - 1):
-                    dev_score, dev_loss = self.evaluate(dev_loader, global_step)
-                    print(f"[Evaluate] Step {global_step}: Dev Acc: {dev_score:.4f}, Dev Loss: {dev_loss:.4f}")
+            if dev_loader:
+                val_acc, val_loss = self.evaluate_loader(dev_loader)
+            else:
+                val_acc, val_loss = 0.0, 0.0
 
-                    # 保存最优模型
-                    if dev_score > self.best_score:
-                        self.best_score = dev_score
-                        self.save_model(save_path)
-                        print(f"Saved best model with Dev Acc: {dev_score:.4f}")
+            # 保存指标到成员变量
+            self.train_epoch_losses.append(train_loss)
+            self.train_epoch_accs.append(train_acc)
+            self.val_epoch_losses.append(val_loss)
+            self.val_epoch_accs.append(val_acc)
 
-                    self.model.train()  # 切回训练模式
+            print(f"[Epoch {epoch + 1}] Train Loss: {train_loss:.4f}, Train Acc: {train_acc:.4f} | "
+                  f"Val Loss: {val_loss:.4f}, Val Acc: {val_acc:.4f}")
 
-                global_step += 1
+            # Early Stopping 判断
+            if dev_loader:
+                if val_acc > self.best_score:
+                    self.best_score = val_acc
+                    self.best_epoch = epoch
+                    self.save_model(save_path)
+                    print(f"Saved best model with Val Acc: {val_acc:.4f}")
+                    no_improve_epochs = 0
+                else:
+                    no_improve_epochs += 1
 
-            # epoch loss
-            epoch_loss = total_loss / len(train_loader)
-            self.train_epoch_losses.append(epoch_loss)
-            print(f"[Epoch {epoch+1}] Train Loss: {epoch_loss:.4f}")
+                if no_improve_epochs >= patience:
+                    print(
+                        f"Early stopping triggered at epoch {epoch + 1}. "
+                        f"Best Val Acc: {self.best_score:.4f} at epoch {self.best_epoch + 1}"
+                    )
+                    break
 
-        print(f"Training finished. Best Dev Acc: {self.best_score:.4f}")
+        print(f"Training finished. Best Val Acc: {self.best_score:.4f} at epoch {self.best_epoch + 1}")
 
     @paddle.no_grad()
-    def evaluate(self, dev_loader: DataLoader, global_step=-1):
+    def evaluate_loader(self, loader: DataLoader):
+        """
+        对任意 DataLoader 计算平均 loss 和 Accuracy
+        """
         self.model.eval()
         total_loss = 0.0
         if self.metric:
             self.metric.reset()
 
-        for imgs, labels in dev_loader:
-            preds = self.model(imgs)
-            loss = self.loss_fn(preds, labels).item()  # 改用 item()
+        for imgs, labels in loader:
+            logits = self.model(imgs)
+            loss = self.loss_fn(logits, labels).item()
             total_loss += loss
+
             if self.metric:
+                preds = paddle.argmax(logits, axis=1)
                 self.metric.update(preds, labels)
 
-        dev_loss = total_loss / len(dev_loader)
-        dev_score = self.metric.accumulate() if self.metric else 0.0
-
-        # 记录
-        if global_step != -1:
-            self.dev_losses.append((global_step, dev_loss))
-            self.dev_scores.append((global_step, dev_score))
-
-        return dev_score, dev_loss
+        avg_loss = total_loss / len(loader)
+        acc = self.metric.accumulate() if self.metric else 0.0
+        return acc, avg_loss
 
     @paddle.no_grad()
     def predict(self, imgs):
+        """
+        对输入 imgs 做预测，返回 logits
+        """
         self.model.eval()
-        preds = self.model(imgs)
-        return preds
+        return self.model(imgs)
 
     def save_model(self, save_path):
         paddle.save(self.model.state_dict(), save_path)
