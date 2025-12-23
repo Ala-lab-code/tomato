@@ -53,10 +53,9 @@ metric = Accuracy()
 runner = Runner(model, optimizer, loss_fn, metric)
 
 runner.train(
-    train_loader,
-    val_loader,
-    num_epochs=10,
-    log_steps=50,
-    eval_steps=200,
-    save_path=f"{CKPT_DIR}/best_resnet_se.pdparams"
+    train_loader=train_loader,
+    dev_loader=val_loader,
+    num_epochs=15,
+    save_path=f"{CKPT_DIR}/best_resnet_se.pdparams",
+    patience=5
 )
