@@ -1,9 +1,11 @@
 import paddle
+print("CUDA:", paddle.is_compiled_with_cuda())
+paddle.set_device('gpu')
+
 import paddle.nn as nn
 import paddle.optimizer as optim
 from paddle.io import DataLoader
 from paddle.metric import Accuracy
-
 from src.dataset import TomatoDataset
 from src.models.resnet_se import ResNet50_SE
 from src.runner import Runner
