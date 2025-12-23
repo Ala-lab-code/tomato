@@ -1,4 +1,3 @@
-# src/runner.py
 import paddle
 from paddle.io import DataLoader
 from tqdm import tqdm
@@ -13,11 +12,10 @@ class Runner:
     - 支持 Early Stopping
     """
 
-    def __init__(self, model, optimizer, loss_fn, metric=None, device=None):
+    def __init__(self, model, optimizer, loss_fn, device=None):
         self.model = model
         self.optimizer = optimizer
         self.loss_fn = loss_fn
-        self.metric = metric
 
         # 训练过程记录
         self.train_epoch_losses = []
@@ -56,9 +54,8 @@ class Runner:
                 loss.backward()
                 self.optimizer.step()
                 self.optimizer.clear_grad()
-
                 total_loss += loss.item()
-                pbar.update(1)  # 只更新进度，不显示 loss
+                pbar.update(1)
 
             # 一个 epoch 完成后统计指标
             if compute_train_metrics:
@@ -103,31 +100,28 @@ class Runner:
     @paddle.no_grad()
     def evaluate_loader(self, loader: DataLoader):
         """
-        对任意 DataLoader 计算平均 loss 和 Accuracy
+        对任意 DataLoader 计算平均 loss 和 Accuracy（手动计算）
         """
         self.model.eval()
         total_loss = 0.0
-        if self.metric:
-            self.metric.reset()
+        correct = 0
+        total = 0
 
         for imgs, labels in loader:
             logits = self.model(imgs)
             loss = self.loss_fn(logits, labels).item()
             total_loss += loss
 
-            if self.metric:
-                preds = paddle.argmax(logits, axis=1)
-                self.metric.update(preds, labels)
+            preds = paddle.argmax(logits, axis=1)
+            correct += (preds == labels).astype('float32').sum().item()
+            total += labels.shape[0]
 
         avg_loss = total_loss / len(loader)
-        acc = self.metric.accumulate() if self.metric else 0.0
+        acc = correct / total if total > 0 else 0.0
         return acc, avg_loss
 
     @paddle.no_grad()
     def predict(self, imgs):
-        """
-        对输入 imgs 做预测，返回 logits
-        """
         self.model.eval()
         return self.model(imgs)
 
