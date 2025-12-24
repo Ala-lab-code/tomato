@@ -8,7 +8,6 @@ from src.dataset import TomatoDataset
 from src.models.resnet_se import ResNet50_SE
 from src.runner import Runner
 
-paddle.set_device("gpu")
 # -----------------------------
 # 基本路径设置
 # -----------------------------
