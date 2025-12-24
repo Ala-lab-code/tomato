@@ -1,49 +1,33 @@
 import matplotlib.pyplot as plt
 
-def plot_hyperparam_curves(
-    results,
-    metric="acc",        # "acc" or "loss"
-    split="val",         # "train" or "val"
-    title=None,
-    figsize=(10, 6)
-):
+
+def plot_hyperparam_results(results, metric="val_acc"):
     """
-    绘制多组超参数组合的训练/验证曲线
-
-    Args:
-        results (list[dict]): 超参数搜索结果列表
-        metric (str): "acc" 或 "loss"
-        split (str): "train" 或 "val"
-        title (str): 图标题
-        figsize (tuple): 图像大小
+    绘制超参数调优结果曲线
     """
+    plt.figure(figsize=(12, 6))
 
-    assert metric in ["acc", "loss"]
-    assert split in ["train", "val"]
+    # 遍历每组超参数组合
+    for res in results:
+        lr = res["lr"]
+        dropout = res["dropout"]
+        if metric == "train_loss":
+            y = res["train_loss"]
+        elif metric == "train_acc":
+            y = res["train_acc"]
+        elif metric == "val_loss":
+            y = res["val_loss"]
+        elif metric == "val_acc":
+            y = res["val_acc"]
+        else:
+            raise ValueError(f"Unknown metric: {metric}")
 
-    key = f"{split}_{metric}"
+        label = f"lr={lr}, dropout={dropout}"
+        plt.plot(range(1, len(y) + 1), y, label=label)
 
-    plt.figure(figsize=figsize)
-
-    for r in results:
-        label = (
-            f"lr={r['lr']}, "
-            f"bs={r['batch_size']}, "
-            f"freeze_l3={r['freeze_layer3']}"
-        )
-        plt.plot(r[key], label=label)
-
-    if title is None:
-        title = f"{split.capitalize()} {metric.upper()} Comparison"
-
-    plt.title(title)
     plt.xlabel("Epoch")
-    plt.ylabel(metric.upper())
-    plt.legend(fontsize=8)
+    plt.ylabel(metric.replace("_", " ").title())
+    plt.title(f"{metric.replace('_', ' ').title()} vs Epoch")
+    plt.legend()
     plt.grid(True)
-    plt.tight_layout()
     plt.show()
-
-
-
-

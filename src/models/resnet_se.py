@@ -44,7 +44,7 @@ class ResNet50_SE(nn.Layer):
     ResNet50 + SE-Block 模型
     用于番茄叶片病害分类任务
     """
-    def __init__(self, num_classes=10, pretrained=True):
+    def __init__(self, num_classes=10, pretrained=True, dropout_rate=0.5):
         super().__init__()
         # 1. 加载 PaddleVision 的预训练 ResNet50
         backbone = resnet50(pretrained=pretrained)
@@ -62,7 +62,7 @@ class ResNet50_SE(nn.Layer):
             nn.Flatten(),
             nn.Linear(2048, 512),
             nn.ReLU(),
-            nn.Dropout(0.5), # 防止过拟合
+            nn.Dropout(dropout_rate), # 防止过拟合
             nn.Linear(512, num_classes) # 防止过拟合
         )
 
