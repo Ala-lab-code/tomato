@@ -1,3 +1,4 @@
+#dataset.py
 import os
 from PIL import Image
 from paddle.io import Dataset
@@ -5,7 +6,7 @@ from paddle.vision.transforms import Compose, Resize, RandomCrop, RandomHorizont
 
 
 class TomatoDataset(Dataset):
-    """
+    """TomatoDataset
     自定义 Tomato 叶片病害图像数据集
     - 支持 train / val / test
     - train 集合支持在线增强

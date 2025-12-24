@@ -1,13 +1,11 @@
 Tomato_Leaf_Disease_FineGrained_Classification/
 ├── data/
-│   ├── raw/
-│   │   └── plantvillage_tomato/      # Kaggle 原始数据（10 类）
+│   ├── raw/ # Kaggle 原始数据（10 类）
 │   ├── processed/
 │   │   ├── train/
 │   │   ├── val/
 │   │   └── test/
-│   └── splits/
-│       └── split_info.json           # 训练/验证/测试划分记录（防止数据泄露）
+│
 │
 ├── notebooks/
 │   ├── 01_data_exploration.ipynb     # 数据探索 + 可视化
@@ -18,16 +16,19 @@ Tomato_Leaf_Disease_FineGrained_Classification/
 │
 ├── src/
 │   ├── __init__.py
-│   ├── config.py                     # 全局参数配置
+│   ├── runner.py                     # 深度模型
 │   ├── dataset.py                    # 数据集类（Paddle）+数据增强
 │   ├── features.py                   # Baseline 特征提取（HOG / Flatten）
 │   ├── models/
 │   │   ├── __init__.py
 │   │   ├── baseline_lr.py            # Logistic Regression
 │   │   ├── resnet_se.py                  # CNN + SE-Block
-│   ├── train.py                      # 通用训练循环
-│   ├── evaluate.py                   # 准确率、混淆矩阵、分类报告
-│   └── utils.py                      # 通用工具函数
+│   ├── experiments/
+│   │   ├── __init__.py
+│   │   ├── train.py            # CNN训练循环
+│   │
+│   ├── preprocess.py
+│   └── runner.py
 │
 ├── README.md                         # 技术报告 + 实验说明
 └── requirements.txt                  # 依赖列表

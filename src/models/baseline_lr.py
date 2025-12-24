@@ -1,4 +1,4 @@
-# lr_baseline.py
+# baseline_lr.py
 import os
 import time
 import pickle
@@ -744,7 +744,8 @@ def main():
     from src.features import create_dataloaders
 
     # 数据路径
-    PROCESSED_DATA_DIR = r"C:\Users\someb\Desktop\tomato_disease_classification\data\processed"
+    BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../"))
+    PROCESSED_DATA_DIR = os.path.join(BASE_DIR, "data/processed")
 
     # 加载划分元数据
     metadata_file = os.path.join(PROCESSED_DATA_DIR, "split_metadata.json")
@@ -753,28 +754,11 @@ def main():
         with open(metadata_file, 'r') as f:
             split_metadata = json.load(f)
 
-    # 加载类别权重
-    weights_file = os.path.join(PROCESSED_DATA_DIR, "class_weights.npy")
-    class_weights = {}
-    if os.path.exists(weights_file):
-        class_weights = np.load(weights_file, allow_pickle=True).item()
-
-    # 加载类别顺序
-    class_order_file = os.path.join(PROCESSED_DATA_DIR, "class_order.txt")
-
     # 创建数据加载器
     print("创建数据加载器...")
-    train_loader, val_loader, test_loader, loaded_class_names, feature_dim, class_to_idx, sample_weights_info = create_dataloaders(
-        data_dir=PROCESSED_DATA_DIR,
-        img_size=128,
-        class_weights=class_weights,
-        split_metadata=split_metadata,
-        class_order_file=class_order_file,
-        batch_size=32
+    train_loader, val_loader, test_loader, class_names, feature_dim, class_to_idx, sample_weights_info = create_dataloaders(
+        PROCESSED_DATA_DIR, img_size=224, batch_size=32, split_metadata=split_metadata
     )
-
-    # 初始化改进的逻辑回归模型
-    num_classes = len(loaded_class_names)
 
     # 准备类别权重
     if class_weights:
@@ -786,7 +770,7 @@ def main():
         class_weights_idx = None
 
     improved_model = ImprovedLogisticRegressionCV(
-        num_classes=num_classes,
+        num_classes=10,
         class_weights=class_weights_idx
     )
 

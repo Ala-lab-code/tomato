@@ -1,3 +1,4 @@
+#resnet_se.py
 import paddle
 import paddle.nn as nn
 from paddle.vision.models import resnet50  # 导入 Paddle 预训练 ResNet50 模型
