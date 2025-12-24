@@ -5,8 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b6c764ab-1281-40f5-b736-78d62e91a0f6" name="Changes" comment="测试提交">
+      <change afterPath="$PROJECT_DIR$/src/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/experiments/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/experiments/train.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/models/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/tools.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/training/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/utils/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/notebook/run_notebook.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/result_analysis.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/runner.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/runner.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -40,7 +48,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
     "git-widget-placeholder": "main",
-    "last_opened_file_path": "C:/梓华/深度学习/课程作业/大作业/tomato",
+    "last_opened_file_path": "C:/梓华/深度学习/课程作业/大作业/tomato/src1",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -49,6 +57,15 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\梓华\深度学习\课程作业\大作业\tomato\src1" />
+      <recent name="C:\梓华\深度学习\课程作业\大作业\tomato\src1\experiments" />
+      <recent name="C:\梓华\深度学习\课程作业\大作业\tomato\src1\models" />
+      <recent name="C:\梓华\深度学习\课程作业\大作业\tomato\src1\training" />
+      <recent name="C:\梓华\深度学习\课程作业\大作业\tomato\src1\utils" />
+    </key>
+  </component>
   <component name="RunManager" selected="Python.main">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="tomato" />
@@ -132,7 +149,7 @@
       <option name="presentableId" value="Default" />
       <updated>1765985701376</updated>
       <workItem from="1765985702684" duration="32870000" />
-      <workItem from="1766423026674" duration="18769000" />
+      <workItem from="1766423026674" duration="23910000" />
     </task>
     <task id="LOCAL-00001" summary="测试提交">
       <option name="closed" value="true" />

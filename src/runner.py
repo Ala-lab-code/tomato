@@ -35,7 +35,7 @@ class Runner:
         paddle.set_device(self.device)
 
     def train(self, train_loader: DataLoader, dev_loader: DataLoader = None,
-              num_epochs=20, save_path="best_model.pdparams", patience=3,
+              num_epochs=10, save_path="best_model.pdparams", patience=5,
               compute_train_metrics=True):
         """
         训练主函数
