@@ -6,7 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="b6c764ab-1281-40f5-b736-78d62e91a0f6" name="Changes" comment="测试提交">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/result_analysis.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/result_analysis.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/experiments/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/experiments/train.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -163,7 +163,7 @@
       <option name="presentableId" value="Default" />
       <updated>1765985701376</updated>
       <workItem from="1765985702684" duration="32870000" />
-      <workItem from="1766423026674" duration="25463000" />
+      <workItem from="1766423026674" duration="26630000" />
     </task>
     <task id="LOCAL-00001" summary="测试提交">
       <option name="closed" value="true" />
@@ -187,6 +187,6 @@
     <SUITE FILE_PATH="coverage/tomato$main.coverage" NAME="main Coverage Results" MODIFIED="1766418206006" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/tomato$resnet_se.coverage" NAME="resnet_se Coverage Results" MODIFIED="1766404014721" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/models" />
     <SUITE FILE_PATH="coverage/tomato$preprocess.coverage" NAME="preprocess Coverage Results" MODIFIED="1766398140723" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
-    <SUITE FILE_PATH="coverage/tomato$train.coverage" NAME="train Coverage Results" MODIFIED="1766537983619" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/experiments" />
+    <SUITE FILE_PATH="coverage/tomato$train.coverage" NAME="train Coverage Results" MODIFIED="1766549670371" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/experiments" />
   </component>
 </project>

@@ -11,15 +11,16 @@ from src.runner import Runner
 # -----------------------------
 # 基本路径设置
 # -----------------------------
-BASE_DIR = "/content/drive/MyDrive/tomato"
+# BASE_DIR = "/content/drive/MyDrive/tomato"
+BASE_DIR = "/tomato"
 CKPT_DIR = os.path.join(BASE_DIR, "checkpoints")
 os.makedirs(CKPT_DIR, exist_ok=True)
 
 # -----------------------------
 # 数据集
 # -----------------------------
-train_dataset = TomatoDataset("data/processed/train", mode='train')
-val_dataset = TomatoDataset("data/processed/val", mode='val')
+train_dataset = TomatoDataset("../../data/processed/train", mode='train')
+val_dataset = TomatoDataset("../../data/processed/val", mode='val')
 
 # -----------------------------
 # 超参数搜索空间
@@ -61,7 +62,7 @@ for lr in learning_rates:
             runner = Runner(model, optimizer, loss_fn)
 
             # 训练
-            runner.train(train_loader, val_loader, num_epochs=10,
+            runner.train(train_loader, val_loader, num_epochs=5, patience=3,
                          save_path=os.path.join(
                              CKPT_DIR, f"best_lr{lr}_bs{batch_size}_freeze{freeze_layer4}.pdparams")
                          )
