@@ -6,9 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="b6c764ab-1281-40f5-b736-78d62e91a0f6" name="Changes" comment="测试提交">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/experiments/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/experiments/train.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/models/resnet_se.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/resnet_se.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tools.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tools.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -166,7 +163,7 @@
       <updated>1765985701376</updated>
       <workItem from="1765985702684" duration="32870000" />
       <workItem from="1766423026674" duration="29830000" />
-      <workItem from="1766557161801" duration="1737000" />
+      <workItem from="1766557161801" duration="2359000" />
     </task>
     <task id="LOCAL-00001" summary="测试提交">
       <option name="closed" value="true" />

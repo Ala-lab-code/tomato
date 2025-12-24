@@ -73,7 +73,8 @@ for lr in learning_rates:
         runner.train(
             train_loader,
             val_loader,
-            num_epochs=10,
+            num_epochs=8,
+            patience=5,
             save_path=f"{CKPT_DIR}/best_lr{lr}_dropout{dropout}.pdparams"
         )
 
