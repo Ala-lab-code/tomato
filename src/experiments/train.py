@@ -11,8 +11,7 @@ from src.runner import Runner
 # -----------------------------
 # 基本路径设置
 # -----------------------------
-# BASE_DIR = "/content/drive/MyDrive/tomato"
-BASE_DIR = "/tomato"
+BASE_DIR = "/content/drive/MyDrive/tomato"
 CKPT_DIR = os.path.join(BASE_DIR, "checkpoints")
 os.makedirs(CKPT_DIR, exist_ok=True)
 
