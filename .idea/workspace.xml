@@ -5,16 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b6c764ab-1281-40f5-b736-78d62e91a0f6" name="Changes" comment="测试提交">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/notebooks/model_training_cnn.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/checkpoints/best_lr0.001_dropout0.3.pdparams" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/result_analysis.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/result_analysis.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/experiments/test_cnn.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/experiments/test_cnn.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/experiments/test_lr.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/experiments/test_lr.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/experiments/train_cnn.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/experiments/train_cnn.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tools.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tools.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -218,7 +209,7 @@
       <updated>1765985701376</updated>
       <workItem from="1765985702684" duration="32870000" />
       <workItem from="1766423026674" duration="29830000" />
-      <workItem from="1766557161801" duration="50867000" />
+      <workItem from="1766557161801" duration="51259000" />
     </task>
     <task id="LOCAL-00001" summary="测试提交">
       <option name="closed" value="true" />
