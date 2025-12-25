@@ -4,21 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b6c764ab-1281-40f5-b736-78d62e91a0f6" name="Changes" comment="测试提交">
-      <change afterPath="$PROJECT_DIR$/checkpoints/best_lr0.001_dropout0.3.pdparams" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/experiments/test_lr.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/experiments/train_lr.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/improved_logistic_regression_cv_model.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/checkpoints/improved_logistic_regression_cv_model.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notebooks/result_analysis.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/notebooks/result_analysis.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/experiments/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/experiments/test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/experiments/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/experiments/train.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/features.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/models/baseline_lr.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/baseline_lr.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runner.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/runner.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tools.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tools.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/structure" beforeDir="false" afterPath="$PROJECT_DIR$/structure" afterDir="false" />
-    </list>
+    <list default="true" id="b6c764ab-1281-40f5-b736-78d62e91a0f6" name="Changes" comment="测试提交" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -198,7 +184,7 @@
       <updated>1765985701376</updated>
       <workItem from="1765985702684" duration="32870000" />
       <workItem from="1766423026674" duration="29830000" />
-      <workItem from="1766557161801" duration="34045000" />
+      <workItem from="1766557161801" duration="34463000" />
     </task>
     <task id="LOCAL-00001" summary="测试提交">
       <option name="closed" value="true" />

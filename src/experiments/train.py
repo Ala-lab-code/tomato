@@ -101,7 +101,7 @@ for lr in learning_rates:
             val_loader,
             num_epochs=8,
             start_epoch=start_epoch,
-            patience=5,
+            patience=4,
             save_dir=exp_ckpt_dir
         )
 
