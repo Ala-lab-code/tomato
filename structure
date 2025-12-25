@@ -26,7 +26,8 @@ Tomato_Leaf_Disease_FineGrained_Classification/
 │   ├── experiments/
 │   │   ├── __init__.py
 │   │   ├── train.py            # CNN训练循环
-│   │
+│   │   ├── train_lr.py         # LR训练循环
+│   │   ├── test_lr.py          # LR训练循环
 │   ├── preprocess.py
 │   └── runner.py
 │

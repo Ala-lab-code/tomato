@@ -1,8 +1,5 @@
 # features.py
 import os
-import sys
-import json
-import pickle
 import numpy as np
 from tqdm import tqdm
 from PIL import Image
@@ -13,7 +10,6 @@ from skimage.feature import hog, local_binary_pattern, graycomatrix, graycoprops
 
 class EnhancedFeatureExtractor:
     """增强版特征提取器，结合多种特征"""
-
     def __init__(self, img_size: int = 224):
         self.img_size = img_size
         self.feature_dim = None
@@ -148,17 +144,14 @@ class EnhancedFeatureExtractor:
 
 class DataLoaderSimple:
     """简单的数据加载器"""
-
-    def __init__(self, data, labels, sample_weights=None, batch_size=32, shuffle=True):
+    def __init__(self, data, labels, batch_size=32, shuffle=True):
         self.data = data
         self.labels = labels
-        self.sample_weights = sample_weights
         self.batch_size = batch_size
         self.shuffle = shuffle
         self.num_samples = len(data)
         self.num_batches = (self.num_samples + batch_size - 1) // batch_size
         self.current_batch = 0
-
         self.indices = np.arange(self.num_samples)
         if shuffle:
             np.random.shuffle(self.indices)
@@ -177,9 +170,8 @@ class DataLoaderSimple:
         idx = self.indices[start:end]
         batch_data = self.data[idx]
         batch_labels = self.labels[idx]
-        batch_weights = self.sample_weights[idx] if self.sample_weights is not None else None
         self.current_batch += 1
-        return (batch_data, batch_labels, batch_weights) if batch_weights is not None else (batch_data, batch_labels)
+        return batch_data, batch_labels
 
     def __len__(self):
         return self.num_batches
@@ -188,19 +180,18 @@ class DataLoaderSimple:
 def load_and_preprocess_data(data_dir, mode='train', img_size=224,
                              class_weights=None, split_info=None,
                              feature_extractor=None):
-    """加载图像并提取特征，不再内部创建 feature_extractor"""
+    """加载图像并提取特征"""
     if feature_extractor is None:
         feature_extractor = EnhancedFeatureExtractor(img_size=img_size)
 
     full_data_dir = os.path.join(data_dir, mode)
-    class_names = list(split_info.keys()) if split_info else sorted(os.listdir(full_data_dir))
+    class_names = list(split_info.keys()) if split_info else []
     class_to_idx = {cls: idx for idx, cls in enumerate(class_names)}
 
     all_samples = []
     for cls in class_names:
         cls_dir = os.path.join(full_data_dir, cls)
         if not os.path.isdir(cls_dir):
-            print(f"类别目录 {cls_dir} 不存在，跳过")
             continue
         img_files = [f for f in sorted(os.listdir(cls_dir))
                      if f.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.tif', '.tiff'))]
@@ -221,42 +212,21 @@ def load_and_preprocess_data(data_dir, mode='train', img_size=224,
     X = np.array(X_list)
     y = np.array(y_list)
 
-    sample_weights = None
-    if class_weights is not None:
-        sample_weights = np.array([class_weights[class_names[label]] for label in y], dtype=np.float32)
 
     if failed_samples:
         print(f"{len(failed_samples)} 张图像处理失败")
 
-    return X, y, sample_weights, class_names
+    return X, y
 
 
-def create_dataloaders(data_dir, img_size=224, batch_size=32, split_metadata=None):
+def create_dataloader(data_dir, split='train', img_size=224, batch_size=32, split_metadata=None):
     split_info = split_metadata.get('split_info', None) if split_metadata else None
-    class_weights = split_metadata.get('class_weights', None) if split_metadata else None
 
-    # 统一创建特征提取器
     feature_extractor = EnhancedFeatureExtractor(img_size=img_size)
-
-    X_train, y_train, w_train, class_names = load_and_preprocess_data(
-        data_dir, 'train', img_size, class_weights, split_info, feature_extractor
+    X, y = load_and_preprocess_data(
+        data_dir, mode=split, img_size=img_size, split_info=split_info,
+        feature_extractor=feature_extractor
     )
-    X_val, y_val, w_val, _ = load_and_preprocess_data(
-        data_dir, 'val', img_size, class_weights, split_info, feature_extractor
-    )
-    X_test, y_test, w_test, _ = load_and_preprocess_data(
-        data_dir, 'test', img_size, class_weights, split_info, feature_extractor
-    )
-
-    class_to_idx = {cls: idx for idx, cls in enumerate(class_names)}
-
-    train_loader = DataLoaderSimple(X_train, y_train, w_train, batch_size=batch_size, shuffle=True)
-    val_loader = DataLoaderSimple(X_val, y_val, w_val, batch_size=batch_size, shuffle=False)
-    test_loader = DataLoaderSimple(X_test, y_test, w_test, batch_size=batch_size, shuffle=False)
-
+    loader = DataLoaderSimple(X, y, batch_size=batch_size, shuffle=(split=='train'))
     feature_dim = feature_extractor.get_feature_dimension()
-
-    sample_weights_info = {'train_weights': w_train, 'val_weights': w_val, 'test_weights': w_test}
-
-    return train_loader, val_loader, test_loader, class_names, feature_dim, class_to_idx, sample_weights_info
-
+    return loader, feature_dim
