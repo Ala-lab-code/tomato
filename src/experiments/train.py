@@ -99,9 +99,9 @@ for lr in learning_rates:
         runner.train(
             train_loader,
             val_loader,
-            num_epochs=8,
+            num_epochs=6,
             start_epoch=start_epoch,
-            patience=4,
+            patience=3,
             save_dir=exp_ckpt_dir
         )
 
