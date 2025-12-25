@@ -62,7 +62,7 @@ val_dataset = TomatoDataset(val_dir, mode="val")
 # -----------------------------
 # 超参数搜索空间
 # -----------------------------
-learning_rates = [1e-4]
+learning_rates = [1e-3,3e-3,1e-4,]
 dropout_rates = [0.3, 0.5, 0.7]
 batch_size = 16
 
