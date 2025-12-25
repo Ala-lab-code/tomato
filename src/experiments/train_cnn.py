@@ -20,13 +20,28 @@ from src.models.resnet_se import ResNet50_SE
 from src.runner import Runner
 
 PROCESSED_DATA_DIR = os.path.join(BASE_DIR, "data/processed")
+CKPT_DIR = os.path.join(BASE_DIR, "checkpoints/CNN")
+os.makedirs(CKPT_DIR, exist_ok=True)
 
 # 读取 split_metadata.json
 with open(os.path.join(PROCESSED_DATA_DIR, "split_metadata.json"), "r") as f:
     split_metadata = json.load(f)
 
-CKPT_DIR = os.path.join(BASE_DIR, "checkpoints/CNN")
-os.makedirs(CKPT_DIR, exist_ok=True)
+class_order = [
+    "Tomato_Bacterial_spot",
+    "Tomato_Early_blight",
+    "Tomato_healthy",
+    "Tomato_Late_blight",
+    "Tomato_Leaf_Mold",
+    "Tomato_Septoria_leaf_spot",
+    "Tomato_Spider_mites_Two_spotted_spider_mite",
+    "Tomato__Target_Spot",
+    "Tomato__Tomato_mosaic_virus",
+    "Tomato__Tomato_YellowLeaf__Curl_Virus"
+]
+
+class_weights = [split_metadata["class_weights"][k] for k in class_order]
+class_weights_tensor = paddle.to_tensor(class_weights, dtype="float32")
 
 # -----------------------------
 # 设备设置
@@ -79,8 +94,6 @@ for lr in learning_rates:
             param.stop_gradient = False
 
         # 损失函数 & 优化器
-        class_weights = split_metadata.get('class_weights')
-        class_weights_tensor = paddle.to_tensor(class_weights, dtype='float32')
         loss_fn = nn.CrossEntropyLoss(weight=class_weights_tensor) # 设置权重
 
         optimizer = optim.Adam(parameters=model.parameters(), learning_rate=lr)

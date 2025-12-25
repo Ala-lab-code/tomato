@@ -1,11 +1,9 @@
-import sys
+# test_cnn.py
 import os
+import sys
 import json
-import pickle
-import shutil
 import paddle
 import paddle.nn as nn
-import paddle.optimizer as optim
 from paddle.io import DataLoader
 
 # --------------------------------------------------
@@ -19,17 +17,31 @@ from src.models.resnet_se import ResNet50_SE
 from src.runner import Runner
 
 PROCESSED_DATA_DIR = os.path.join(BASE_DIR, "data/processed")
-CKPT_ROOT = os.path.join(BASE_DIR, "checkpoints/CNN")
-os.makedirs(CKPT_ROOT, exist_ok=True)
+CKPT_DIR = os.path.join(BASE_DIR, "checkpoints/CNN")
+TEST_DIR = os.path.join(PROCESSED_DATA_DIR, "test")
 
 # --------------------------------------------------
-# 读取 split_metadata.json（类别权重）
+# 读取类别权重
 # --------------------------------------------------
 with open(os.path.join(PROCESSED_DATA_DIR, "split_metadata.json"), "r") as f:
     split_metadata = json.load(f)
 
-class_weights = split_metadata["class_weights"]
+class_order = [
+    "Tomato_Bacterial_spot",
+    "Tomato_Early_blight",
+    "Tomato_healthy",
+    "Tomato_Late_blight",
+    "Tomato_Leaf_Mold",
+    "Tomato_Septoria_leaf_spot",
+    "Tomato_Spider_mites_Two_spotted_spider_mite",
+    "Tomato__Target_Spot",
+    "Tomato__Tomato_mosaic_virus",
+    "Tomato__Tomato_YellowLeaf__Curl_Virus"
+]
+
+class_weights = [split_metadata["class_weights"][k] for k in class_order]
 class_weights_tensor = paddle.to_tensor(class_weights, dtype="float32")
+
 
 # --------------------------------------------------
 # 设备
@@ -38,120 +50,44 @@ device = "gpu" if paddle.is_compiled_with_cuda() else "cpu"
 paddle.set_device(device)
 
 # --------------------------------------------------
-# 数据集
+# 测试数据
 # --------------------------------------------------
-train_dir = os.path.join(PROCESSED_DATA_DIR, "train")
-val_dir = os.path.join(PROCESSED_DATA_DIR, "val")
-
-train_dataset = TomatoDataset(train_dir, mode="train")
-val_dataset = TomatoDataset(val_dir, mode="val")
+test_dataset = TomatoDataset(TEST_DIR, mode="val")
+test_loader = DataLoader(test_dataset, batch_size=16)
 
 # --------------------------------------------------
-# 超参数搜索空间
+# 模型
 # --------------------------------------------------
-learning_rates = [1e-3, 3e-4, 1e-4]
-dropout_rates = [0.3, 0.5, 0.7]
-batch_size = 16
-num_epochs = 6
-patience = 3
+model = ResNet50_SE(num_classes=10, pretrained=False)
 
-results = []
-
-# --------------------------------------------------
-# 超参数搜索
-# --------------------------------------------------
-for lr in learning_rates:
-    for dropout in dropout_rates:
-        print(f"\n=== Training lr={lr}, dropout={dropout} ===")
-
-        exp_name = f"lr{lr}_dropout{dropout}"
-        exp_ckpt_dir = os.path.join(CKPT_ROOT, exp_name)
-        os.makedirs(exp_ckpt_dir, exist_ok=True)
-        last_ckpt_path = os.path.join(exp_ckpt_dir, "last.ckpt")
-
-        # DataLoader
-        train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
-        val_loader = DataLoader(val_dataset, batch_size=batch_size)
-
-        # --------------------------------------------------
-        # 模型
-        # --------------------------------------------------
-        model = ResNet50_SE(num_classes=10, pretrained=True, dropout_rate=dropout)
-
-        # 冻结 backbone，仅训练 layer4
-        for param in model.backbone.parameters():
-            param.stop_gradient = True
-        for param in model.backbone[7].parameters():
-            param.stop_gradient = False
-
-        # --------------------------------------------------
-        # Loss + Optimizer（类别权重只在 loss 中起作用）
-        # --------------------------------------------------
-        loss_fn = nn.CrossEntropyLoss(weight=class_weights_tensor)
-        optimizer = optim.Adam(parameters=model.parameters(), learning_rate=lr)
-
-        runner = Runner(model, optimizer, loss_fn, device=device)
-
-        # --------------------------------------------------
-        # Resume（如存在）
-        # --------------------------------------------------
-        if os.path.exists(last_ckpt_path):
-            print(f"Resuming from {last_ckpt_path}")
-            start_epoch = runner.load_checkpoint(last_ckpt_path)
-        else:
-            start_epoch = 0
-
-        # --------------------------------------------------
-        # 训练
-        # --------------------------------------------------
-        runner.train(
-            train_loader=train_loader,
-            dev_loader=val_loader,
-            num_epochs=num_epochs,
-            start_epoch=start_epoch,
-            patience=patience,
-            save_dir=exp_ckpt_dir
-        )
-
-        # --------------------------------------------------
-        # 保存结果（用于画图 & 对比）
-        # --------------------------------------------------
-        results.append({
-            "lr": lr,
-            "dropout": dropout,
-            "train_loss": runner.train_epoch_losses,
-            "train_acc": runner.train_epoch_accs,
-            "train_f1": runner.train_epoch_f1,
-            "val_loss": runner.val_epoch_losses,
-            "val_acc": runner.val_epoch_accs,
-            "val_f1": runner.val_epoch_f1,
-            "ckpt_dir": exp_ckpt_dir
-        })
+ckpt_path = os.path.join(CKPT_DIR, "best_model.ckpt")
+ckpt = paddle.load(ckpt_path)
+model.set_state_dict(ckpt["model"])
+model.eval()
 
 # --------------------------------------------------
-# 保存所有实验结果
+# 损失函数（带类别权重）
 # --------------------------------------------------
-result_path = os.path.join(CKPT_ROOT, "hyperparam_results.pkl")
-with open(result_path, "wb") as f:
-    pickle.dump(results, f)
-
-print(f"\nAll results saved to: {result_path}")
+loss_fn = nn.CrossEntropyLoss(weight=class_weights_tensor)
 
 # --------------------------------------------------
-# 选最优模型（Val Acc）
+# Runner（测试不需要 optimizer）
 # --------------------------------------------------
-best_exp = max(results, key=lambda x: max(x["val_acc"]))
-best_lr = best_exp["lr"]
-best_dropout = best_exp["dropout"]
-best_val_acc = max(best_exp["val_acc"])
+runner = Runner(
+    model=model,
+    optimizer=None,
+    loss_fn=loss_fn,
+    device=device
+)
 
-best_ckpt_dir = best_exp["ckpt_dir"]
-best_ckpt_path = os.path.join(best_ckpt_dir, "best.ckpt")
+# --------------------------------------------------
+# 测试
+# --------------------------------------------------
+test_loss, test_acc, test_f1, test_p, test_r = runner.evaluate_loader(test_loader)
 
-final_model_path = os.path.join(CKPT_ROOT, "best_model.ckpt")
-shutil.copy(best_ckpt_path, final_model_path)
-
-print("\n===== Best CNN Model =====")
-print(f"lr={best_lr}, dropout={best_dropout}")
-print(f"Best Val Acc={best_val_acc:.4f}")
-print(f"Saved to: {final_model_path}")
+print("\n===== Test Results (CNN) =====")
+print(f"Loss       : {test_loss:.4f}")
+print(f"Accuracy   : {test_acc:.4f}")
+print(f"F1-weighted: {test_f1:.4f}")
+print(f"Precision  : {test_p:.4f}")
+print(f"Recall     : {test_r:.4f}")
