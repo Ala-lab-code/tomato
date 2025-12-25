@@ -8,6 +8,9 @@ import paddle.nn as nn
 import paddle.optimizer as optim
 from paddle.io import DataLoader
 import json
+from src.dataset import TomatoDataset
+from src.models.resnet_se import ResNet50_SE
+from src.runner import Runner
 
 # -----------------------------
 # 路径设置
@@ -15,15 +18,13 @@ import json
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../"))
 sys.path.append(BASE_DIR)
 
-from src.dataset import TomatoDataset
-from src.models.resnet_se import ResNet50_SE
-from src.runner import Runner
-
 PROCESSED_DATA_DIR = os.path.join(BASE_DIR, "data/processed")
 CKPT_DIR = os.path.join(BASE_DIR, "checkpoints/CNN")
 os.makedirs(CKPT_DIR, exist_ok=True)
 
+# -----------------------------
 # 读取 split_metadata.json
+# -----------------------------
 with open(os.path.join(PROCESSED_DATA_DIR, "split_metadata.json"), "r") as f:
     split_metadata = json.load(f)
 
@@ -61,17 +62,31 @@ val_dataset = TomatoDataset(val_dir, mode="val")
 # -----------------------------
 # 超参数搜索空间
 # -----------------------------
-learning_rates = [1e-3, 3e-4, 1e-4]
+learning_rates = [1e-4]
 dropout_rates = [0.3, 0.5, 0.7]
 batch_size = 16
 
-results = []
+# -----------------------------
+# 加载已有结果
+# -----------------------------
+result_path = os.path.join(CKPT_DIR, "hyperparam_results.pkl")
+if os.path.exists(result_path):
+    with open(result_path, "rb") as f:
+        results = pickle.load(f)
+    print(f"已加载 {len(results)} 个组合的历史结果，继续训练未完成组合")
+else:
+    results = []
 
 # -----------------------------
 # 超参数搜索循环
 # -----------------------------
 for lr in learning_rates:
     for dropout in dropout_rates:
+        # 检查是否已训练过
+        if any(r['lr'] == lr and r['dropout'] == dropout for r in results):
+            print(f"组合 lr={lr}, dropout={dropout} 已训练过，跳过")
+            continue
+
         print(f"\n=== Training lr={lr}, dropout={dropout} ===")
 
         # 每个实验独立目录
@@ -94,8 +109,7 @@ for lr in learning_rates:
             param.stop_gradient = False
 
         # 损失函数 & 优化器
-        loss_fn = nn.CrossEntropyLoss(weight=class_weights_tensor) # 设置权重
-
+        loss_fn = nn.CrossEntropyLoss(weight=class_weights_tensor)
         optimizer = optim.Adam(parameters=model.parameters(), learning_rate=lr)
 
         runner = Runner(model, optimizer, loss_fn, device=device)
@@ -124,18 +138,21 @@ for lr in learning_rates:
             "dropout": dropout,
             "train_loss": runner.train_epoch_losses,
             "train_acc": runner.train_epoch_accs,
+            "train_f1": runner.train_epoch_f1,
+            "train_precision": runner.train_epoch_precision,
+            "train_recall": runner.train_epoch_recall,
             "val_loss": runner.val_epoch_losses,
             "val_acc": runner.val_epoch_accs,
+            "val_f1": runner.val_epoch_f1,
+            "val_precision": runner.val_epoch_precision,
+            "val_recall": runner.val_epoch_recall,
             "ckpt_dir": exp_ckpt_dir
         })
 
-# -----------------------------
-# 保存所有组合训练结果
-# -----------------------------
-result_path = os.path.join(CKPT_DIR, "hyperparam_results.pkl")
-with open(result_path, "wb") as f:
-    pickle.dump(results, f)
-print(f"\nAll results saved to: {result_path}")
+        # 实时保存 results
+        with open(result_path, "wb") as f:
+            pickle.dump(results, f)
+        print(f"已保存 hyperparam_results.pkl (共 {len(results)} 个组合)")
 
 # -----------------------------
 # 选出最佳组合并保存模型
